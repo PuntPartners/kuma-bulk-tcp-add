@@ -13,6 +13,15 @@ to add the monitors as part of the group.
 
 Usage:
 
+Install Deps and compile
+
+```
+$ npm i
+$ ./node_modules/.bin/tsc
+```
+
+Now add the monitors via STDIN
+
 ```
 $ node client.js -h
 Usage: client [options]
