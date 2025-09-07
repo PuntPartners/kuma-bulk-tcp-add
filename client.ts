@@ -9,7 +9,7 @@ program
     .option('-p, --password <password>', 'Password of the Uptime Kuma server')
     .option('-v, --verbose', 'Output Socket.IO debug messages')
     .option('-d, --dry-run', 'Do not send any data to the server')
-    .version('0.1.0')
+    .version('0.2.0')
     .parse(process.argv);
 
 const options = program.opts();
@@ -40,6 +40,8 @@ const monitor = {
     resendInterval: 360,
     retryInterval: 60,
     upsideDown: false,
+    url: "https://",
+    parent: 0,
 }
 
 async function addMonitorsSequentially() {
@@ -53,14 +55,18 @@ async function addMonitorsSequentially() {
 
     const addMonitorPromise = (record: any) => {
         return new Promise<void>((resolve) => {
+            let monitorData = { ...monitor, type: 'port', name: record[0], hostname: record[0], port: record[1]};
             if (options.dryRun !== true) {
                 // Add monitor
-                socket.emit('add', { ...monitor, type: 'http', name: record[0], url: record[1] }, () => {
+                if (record.length > 2) {
+                    monitorData.parent = parseInt(record[2], 10);
+                }
+                socket.emit('add', monitorData, () => {
                     console.log('Added monitor', ++count, record[0]);
                     resolve();
                 });
             } else {
-                console.log('[Dry run] Added monitor', ++count, record[0]);
+                console.log('[Dry run] Added monitor', ++count, monitorData);
                 resolve();
             }
         });
