@@ -6,7 +6,10 @@ from a csv file.
 
 The script expects input in the format `name,url` from stdin,
 so you can use this with cat, grep and pipe. It's written
-in TypeScript, so make sure to build first using `tsc`
+in TypeScript, so make sure to build first using `tsc`.
+
+You can also optionally add `parent_id` as the 3rd column
+to add the monitors as part of the group.
 
 Usage:
 
